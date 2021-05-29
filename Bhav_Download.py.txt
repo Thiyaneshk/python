@@ -1,0 +1,46 @@
+import datetime
+import glob
+import os
+import pandas as pd
+import time
+import webbrowser
+
+begin = datetime.date(2021, 5, 1)
+end = datetime.date(2021, 5, 10)
+
+# download_folder = r"C:\Users" + "\\" + "shrio" + "\\" + "Downloads" + "\\"
+download_folder = r"C:\Users" + "\\" + "shrio" + "\\" + "Desktop" + "\\" + "bhav_files" + "\\"
+
+file_patternn = str(download_folder) + str('sec_bhavdata_full_*.csv')
+fileList = glob.glob(file_patternn)
+for filePath in fileList:
+    try:
+        os.remove(filePath)
+    except:
+        print("Error while deleting file : ", filePath)
+
+next_day = begin
+while True:
+    if next_day > end:
+        break
+    dayy = str(next_day.day)
+    l_day = dayy.zfill(2)
+    montth = str(next_day.month)
+    l_month = montth.zfill(2)
+
+    myDateFmt = l_day + l_month + str(next_day.year)
+    next_day += datetime.timedelta(days=1)
+    if len(pd.bdate_range(next_day, next_day)) == 1:
+        bhav_url = str('https://archives.nseindia.com/products/content/sec_bhavdata_full_') + str(myDateFmt) + str(
+            '.csv')
+        webbrowser.open(bhav_url)
+
+time.sleep(10)
+Bhav_Master_folder = r"C:\Users" + "\\" + "shrio" + "\\" + "Desktop" + "\\" + "bhav_files" + "\\"
+
+file_patternn = str(download_folder) + str('sec_bhavdata_full_*')
+fileList = glob.glob(file_patternn)
+
+os.chdir(Bhav_Master_folder)
+combined_csv = pd.concat([pd.read_csv(f) for f in fileList])
+combined_csv.to_csv("Bhav_Master.csv", index=False, encoding='utf-8-sig')
