@@ -45,3 +45,11 @@ fileList = glob.glob(file_patternn)
 os.chdir(Bhav_Master_folder)
 combined_csv = pd.concat([pd.read_csv(f) for f in fileList])
 combined_csv.to_csv("Bhav_Master.csv", index=False, encoding='utf-8-sig')
+
+lines_seen = set() # holds lines already seen
+outfile = open(r'C:\Users\shrio\Desktop\bhav_files\Bhav_Master_Final.csv', "w")
+for line in open(r'C:\Users\shrio\Desktop\bhav_files\Bhav_Master.csv', "r"):
+    if line not in lines_seen: # not a duplicate
+        outfile.write(line)
+        lines_seen.add(line)
+outfile.close()
